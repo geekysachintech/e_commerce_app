@@ -1,14 +1,16 @@
-import 'package:e_commerce_app/providers/products.dart';
-import 'package:e_commerce_app/screens/edit_product_screen.dart';
-import 'package:e_commerce_app/widgets/app_drawer.dart';
-import 'package:e_commerce_app/widgets/user_product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/products.dart';
+import '../widgets/user_product_item.dart';
+import '../widgets/app_drawer.dart';
+import './edit_product_screen.dart';
+
 class UserProductsScreen extends StatelessWidget {
   static const routeName = '/user-products';
-  Future<void> _refreshProdycts(BuildContext context) async {
-    await Provider.of<Products>(context, listen: false).fetchAndSetProducts();
+
+  Future<void> _refreshProducts(BuildContext context) async {
+    await Provider.of<Products>(context).fetchAndSetProducts();
   }
 
   @override
@@ -19,7 +21,7 @@ class UserProductsScreen extends StatelessWidget {
         title: const Text('Your Products'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () {
               Navigator.of(context).pushNamed(EditProductScreen.routeName);
             },
@@ -28,21 +30,21 @@ class UserProductsScreen extends StatelessWidget {
       ),
       drawer: AppDrawer(),
       body: RefreshIndicator(
-        onRefresh: () => _refreshProdycts(context),
+        onRefresh: () => _refreshProducts(context),
         child: Padding(
           padding: EdgeInsets.all(8),
           child: ListView.builder(
             itemCount: productsData.items.length,
             itemBuilder: (_, i) => Column(
-              children: [
-                UserProductItem(
-                  productsData.items[i].id,
-                  productsData.items[i].title,
-                  productsData.items[i].imageUrl,
+                  children: [
+                    UserProductItem(
+                      productsData.items[i].id,
+                      productsData.items[i].title,
+                      productsData.items[i].imageUrl,
+                    ),
+                    Divider(),
+                  ],
                 ),
-                Divider(),
-              ],
-            ),
           ),
         ),
       ),
